@@ -1,14 +1,14 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import WelcomePage from './pages/WelcomePage';
-import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
-import HomePage from './pages/HomePage';
-import NavOutlet from './components/NavOutlet';
-import ProfilePage from './pages/ProfilePge';
-import ConfigPage from './pages/ConfigPage';
-import WishlistPage from './pages/WishlistPage';
-import CollectionPage from './pages/CollectionPage';
+import WelcomePage from './pages/WelcomePage/WelcomePage';
+import LoginPage from './pages/LoginPage/LoginPage';
+import SignupPage from './pages/SignupPage/SignupPage';
+import HomePage from './pages/HomePage/HomePage';
+import NavOutlet from './components/NavOutlet/NavOutlet';
+import ProfilePage from './pages/ProfilePage/ProfilePge';
+import ConfigPage from './pages/ConfigPage/ConfigPage';
+import WishlistPage from './pages/WishlistPage/WishlistPage';
+import CollectionPage from './pages/CollectionPage/CollectionPage';
 
 import './App.css';
 
