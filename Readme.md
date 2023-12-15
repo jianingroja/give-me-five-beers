@@ -33,12 +33,13 @@ This project is built with MERN stack, fully written in Typescript.
 
 ### Frontend
 
-- React
-- Redux
+- React, React Router
+- Redux, RTK Query
 - Vanilla Css
 
 ### Backend
 
+- Node.js
 - Express
 - Mongo DB Atlas
 - Mongoose
