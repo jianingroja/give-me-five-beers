@@ -1,20 +1,20 @@
-import express from 'express';
-import cors from 'cors';
 import dotenv from 'dotenv';
+dotenv.config();
 
 import { connectDB } from './dbConfig';
-import router from './router';
+import app from './app';
 
-dotenv.config();
-connectDB();
-
-const app = express();
 const PORT = process.env.PORT;
 
-app.use(cors());
-app.use(express.json());
-app.use(router);
+// make sure to connect with DB first
+(async () => {
+  try {
+    await connectDB();
 
-app.listen(PORT, () => {
-  console.log(`🍻Express your love for beer at port ${PORT}`);
-});
+    app.listen(PORT, () => {
+      console.log(`🍻Express your love for beer at port ${PORT}`);
+    });
+  } catch (error) {
+    console.log('error when expressing love', error);
+  }
+})();
