@@ -12,7 +12,7 @@ const HomeBeerPage = () => {
   // use context?
   // how to use choice and type; extremely ugly!
   const choice = getChoice();
-  const hasChosen = !!choice.choiceId;
+  const hasChosen = !!choice.id;
   const [type, setType] = useState(null);
   console.log(choice, hasChosen, type);
 

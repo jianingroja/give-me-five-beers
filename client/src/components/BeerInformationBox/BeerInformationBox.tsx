@@ -1,16 +1,11 @@
 import { useState, useEffect } from 'react';
 
-import { useAppDispatch } from '../../redux/hooks';
 import {
   useGetUserWishlistQuery,
   useAddToWishlistMutation,
-  useGetRandomBarQuery,
-  useGetChosenBarQuery,
-  useGetRandomBreweryQuery,
-  useGetChosenBreweryQuery,
-  usePostBeerOptionMutation,
+  useGetTodayBeerOptionQuery,
 } from '../../redux/apiSlice';
-import { getUserId, setChoice } from '../../redux/configSlice';
+import { getUserId } from '../../redux/configSlice';
 
 import Text from '../Text/Text';
 
@@ -51,48 +46,33 @@ const BeerInformationBox = ({ hasChosen, choice, type }: Props) => {
       break;
   }
 
-  // const title = {
-  //   bar: 'Fancying a drink',
-  //   brewery: 'Exploring the world',
-  // };
-
-  // const text = {
-  //   bar: 'go to this bar',
-  //   brewery: 'look at this brewery',
-  // };
-
-  // const iconSrc = {
-  //   bar: HazyIpa,
-  //   brewery: Brewery,
-  // };
-
   const userId = getUserId();
+  // todo: any
+  const [optionInfo, setOptionInfo] = useState<any>(null);
   const [inWishlist, setInWishlist] = useState(false);
-  const dispatch = useAppDispatch();
 
-  // todo: refactor
-  // customize a hook?
-  const useQuery = () => {
-    let res;
-    if (type === 'bar') {
-      res = hasChosen
-        ? useGetChosenBarQuery(choice.choiceId)
-        : useGetRandomBarQuery();
-    } else {
-      res = hasChosen
-        ? useGetChosenBreweryQuery(choice.choiceId)
-        : useGetRandomBreweryQuery();
-    }
-
-    return res;
-  };
-
-  const { data: info, isSuccess: isInfoSuccess } = useQuery();
+  const { data: optionData, isSuccess: isOptionSuccess } =
+    useGetTodayBeerOptionQuery(userId);
   const { data: wishlist, isSuccess: isWishlistSuccess } =
     useGetUserWishlistQuery(userId);
-
-  const [postBeerOption] = usePostBeerOptionMutation();
   const [addToWishlist] = useAddToWishlistMutation();
+
+  useEffect(() => {
+    if (isOptionSuccess) {
+      const {
+        // todo: change after modify db response structure
+        info: { bar },
+      } = optionData;
+      setOptionInfo(bar);
+    }
+  }, [isOptionSuccess]);
+
+  useEffect(() => {
+    if (isWishlistSuccess) {
+      const isInWishlist = wishlist.includes(choice.id);
+      setInWishlist(isInWishlist);
+    }
+  }, [isWishlistSuccess]);
 
   const handleAddToWishlist = () => {
     // todo: add front end secure check
@@ -104,59 +84,34 @@ const BeerInformationBox = ({ hasChosen, choice, type }: Props) => {
       });
   };
 
-  useEffect(() => {
-    if (isInfoSuccess && !hasChosen) {
-      const choice = {
-        type,
-        choiceId: type === 'bar' ? info._id : info.id,
-        userId,
-      };
-      postBeerOption(choice)
-        .unwrap()
-        .then((res) => {
-          // add to redux, id of the choice, for add to wishlist btn to work
-          console.log('post beer res', res);
-          const { type, choiceId, _id } = res;
-          dispatch(setChoice({ id: _id, type, choiceId }));
-        });
-    }
-  }, [isInfoSuccess]);
-
-  useEffect(() => {
-    if (isWishlistSuccess) {
-      const isInWishlist = wishlist.includes(choice.id);
-      setInWishlist(isInWishlist);
-    }
-  }, [isWishlistSuccess]);
-
   return (
     <div className="beer-information-box">
       <Text large bold underline text={title} />
       <Text text={text} />
-      {isInfoSuccess && (
+      {optionInfo && (
         <div className="beer-information">
           <img className="icon" src={iconSrc} alt="" />
-          <p>{info.name}</p>
+          <p>{optionInfo.name}</p>
           <p>
             {type === 'bar'
-              ? info.formattedAddress.split(',').slice(0, 2).join(',')
-              : info.address_1}
+              ? optionInfo.formattedAddress.split(',').slice(0, 2).join(',')
+              : optionInfo.address_1}
           </p>
           <a
-            href={type === 'bar' ? info.website : info.website_url}
+            href={type === 'bar' ? optionInfo.website : optionInfo.website_url}
             target="_blank"
           >
             website
           </a>
           <p>
-            {info.city} {info.country}
+            {optionInfo.city} {optionInfo.country}
           </p>
           {type === 'bar' && (
             <iframe
               width="90%"
               height="280px"
               style={{ border: 'none' }}
-              src={`https://www.google.com/maps/embed/v1/place?key=${API_KEY}&q=place_id:${info.placeId}&zoom=14`}
+              src={`https://www.google.com/maps/embed/v1/place?key=${API_KEY}&q=place_id:${optionInfo.placeId}&zoom=14`}
             ></iframe>
           )}
         </div>
