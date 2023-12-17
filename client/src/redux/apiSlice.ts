@@ -10,14 +10,14 @@ export const dbApi = createApi({
   reducerPath: 'dbApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000' }),
   tagTypes: ['Config', 'Wishlist', 'Choice', 'Todo'],
-  endpoints: builder => ({
+  endpoints: (builder) => ({
     getTodos: builder.query<Todo[], string>({
-      query: userId => `/user/${userId}/todo`,
+      query: (userId) => `/user/${userId}/todo`,
       providesTags: ['Todo'],
     }),
 
     postTodo: builder.mutation<Todo, Todo>({
-      query: todo => ({
+      query: (todo) => ({
         url: '/todo',
         method: 'POST',
         body: todo,
@@ -34,7 +34,7 @@ export const dbApi = createApi({
     }),
 
     login: builder.mutation<any, any>({
-      query: user => ({
+      query: (user) => ({
         url: '/login',
         method: 'POST',
         body: user,
@@ -42,7 +42,7 @@ export const dbApi = createApi({
     }),
 
     signup: builder.mutation<any, any>({
-      query: user => ({
+      query: (user) => ({
         url: '/signup',
         method: 'POST',
         body: user,
@@ -50,12 +50,12 @@ export const dbApi = createApi({
     }),
 
     getUser: builder.query<User, string>({
-      query: userId => `/user/${userId}`,
+      query: (userId) => `/user/${userId}`,
       providesTags: ['Config', 'Wishlist', 'Choice', 'Todo'],
     }),
 
     getUserWishlist: builder.query<any, any>({
-      query: userId => `/user/${userId}/wishlist`,
+      query: (userId) => `/user/${userId}/wishlist`,
       transformResponse: (response: any) => {
         return response[0]['wishlist'];
       },
@@ -63,7 +63,7 @@ export const dbApi = createApi({
     }),
 
     getUserWishlistDetail: builder.query<any, any>({
-      query: userId => `/user/${userId}/wishlist/detail`,
+      query: (userId) => `/user/${userId}/wishlist/detail`,
       transformResponse: (response: any) => {
         return response[0]['wishlist'];
       },
@@ -71,7 +71,7 @@ export const dbApi = createApi({
     }),
 
     addToWishlist: builder.mutation<any, any>({
-      query: info => ({
+      query: (info) => ({
         url: `/wishlist`,
         method: 'POST',
         body: info,
@@ -85,23 +85,37 @@ export const dbApi = createApi({
     }),
 
     getChosenBar: builder.query<any, string>({
-      query: id => `/choice/bar/${id}`,
+      query: (id) => `/choice/bar/${id}`,
+    }),
+
+    getTodayBeerOption: builder.query<any, any>({
+      query: (userId) => `/choice/today/${userId}`,
     }),
 
     postBeerOption: builder.mutation<any, any>({
-      query: ({ type, userId, choiceId }) => ({
+      query: ({ type, userId }) => ({
         url: `/choice/${type}`,
         method: 'POST',
         body: {
           userId,
-          choiceId,
         },
       }),
       invalidatesTags: ['Choice'],
     }),
+    // postBeerOption: builder.mutation<any, any>({
+    //   query: ({ type, userId, choiceId }) => ({
+    //     url: `/choice/${type}`,
+    //     method: 'POST',
+    //     body: {
+    //       userId,
+    //       choiceId,
+    //     },
+    //   }),
+    //   invalidatesTags: ['Choice'],
+    // }),
 
     postConfig: builder.mutation<any, any>({
-      query: config => ({
+      query: (config) => ({
         url: `/config/${config.type}`,
         method: 'POST',
         body: config,
@@ -117,7 +131,7 @@ export const breweryApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://api.openbrewerydb.org/v1/breweries',
   }),
-  endpoints: builder => ({
+  endpoints: (builder) => ({
     getRandomBrewery: builder.query<any, void>({
       query: () => ({
         url: '/random',
@@ -129,7 +143,7 @@ export const breweryApi = createApi({
       },
     }),
     getChosenBrewery: builder.query<any, string>({
-      query: id => `${id}`,
+      query: (id) => `${id}`,
     }),
   }),
 });
@@ -148,6 +162,7 @@ export const {
   useAddToWishlistMutation,
   useGetRandomBarQuery,
   useGetChosenBarQuery,
+  useGetTodayBeerOptionQuery,
   usePostBeerOptionMutation,
   usePostConfigMutation,
 } = dbApi;
