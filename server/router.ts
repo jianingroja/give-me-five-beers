@@ -26,6 +26,7 @@ router.put('/todo/:todoId/:type', todoController.markTodo);
 router.get('/choice/:type', barController.getRandomBar);
 router.get('/choice/:type/:id', barController.getChosenBar);
 
+router.get('/choice/today/:userId', ChoiceController.getTodayBeerOption);
 router.post('/choice/:type', ChoiceController.postBeerOption);
 
 // router.post('/insertbar', barController.insertBar);
