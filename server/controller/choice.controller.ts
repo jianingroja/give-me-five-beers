@@ -16,9 +16,11 @@ const BASE_URL = {
 const getTodayBeerOption = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
+    if (!userId) {
+      res.status(400).end();
+    }
 
     const todayChoice = await getTodayChoice(userId);
-
     if (!todayChoice) {
       throw "Can not find today's choice";
     }
