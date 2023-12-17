@@ -6,11 +6,11 @@ import {
   useGetTodayBeerOptionQuery,
 } from '../../redux/apiSlice';
 import { getUserId } from '../../redux/configSlice';
-
+import { Place } from '../../types/option';
 import Text from '../Text/Text';
 
 import HazyIpa from '../../assets/hazy-ipa.png';
-import Brewery from '../../assets/brewery.png';
+import BreweryIcon from '../../assets/brewery.png';
 
 import './BeerInformationBox.css';
 
@@ -38,7 +38,7 @@ const BeerInformationBox = ({ hasChosen, choice, type }: Props) => {
     case 'brewery':
       title = 'Exploring the world';
       text = 'look at this brewery';
-      iconSrc = Brewery;
+      iconSrc = BreweryIcon;
 
       break;
 
@@ -47,8 +47,7 @@ const BeerInformationBox = ({ hasChosen, choice, type }: Props) => {
   }
 
   const userId = getUserId();
-  // todo: any
-  const [optionInfo, setOptionInfo] = useState<any>(null);
+  const [optionInfo, setOptionInfo] = useState<Place | null>(null);
   const [inWishlist, setInWishlist] = useState(false);
 
   const { data: optionData, isSuccess: isOptionSuccess } =
@@ -59,11 +58,8 @@ const BeerInformationBox = ({ hasChosen, choice, type }: Props) => {
 
   useEffect(() => {
     if (isOptionSuccess) {
-      const {
-        // todo: change after modify db response structure
-        info: { bar },
-      } = optionData;
-      setOptionInfo(bar);
+      const { info } = optionData;
+      setOptionInfo(info as Place);
     }
   }, [isOptionSuccess]);
 
