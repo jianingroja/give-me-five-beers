@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-import { Config } from '../types';
+import { Config } from '../types/types';
 
 import { useAppSelector } from './hooks';
 
@@ -53,10 +53,10 @@ export const { setTime, setHomePage, setChoice, setUserId } =
   configSlice.actions;
 
 export const getHomePageType = () =>
-  useAppSelector(state => state.config.homePage);
+  useAppSelector((state) => state.config.homePage);
 
-export const getTime = () => useAppSelector(state => state.config.time);
-export const getChoice = () => useAppSelector(state => state.config.choice);
-export const getUserId = () => useAppSelector(state => state.config.userId);
+export const getTime = () => useAppSelector((state) => state.config.time);
+export const getChoice = () => useAppSelector((state) => state.config.choice);
+export const getUserId = () => useAppSelector((state) => state.config.userId);
 
 export const configReducer = configSlice.reducer;

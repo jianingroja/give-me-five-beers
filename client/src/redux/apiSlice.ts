@@ -1,7 +1,8 @@
 // Need to use the React-specific entry point to import createApi
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import { Todo, User } from '../types';
+import { Todo, User } from '../types/types';
+import { OptionResponse, OptionRequestArg } from '../types/option';
 
 // why do i use rtk?
 
@@ -88,11 +89,11 @@ export const dbApi = createApi({
       query: (id) => `/choice/bar/${id}`,
     }),
 
-    getTodayBeerOption: builder.query<any, any>({
+    getTodayBeerOption: builder.query<OptionResponse, string>({
       query: (userId) => `/choice/today/${userId}`,
     }),
 
-    postBeerOption: builder.mutation<any, any>({
+    postBeerOption: builder.mutation<void, OptionRequestArg>({
       query: ({ type, userId }) => ({
         url: `/choice/${type}`,
         method: 'POST',
@@ -102,17 +103,6 @@ export const dbApi = createApi({
       }),
       invalidatesTags: ['Choice'],
     }),
-    // postBeerOption: builder.mutation<any, any>({
-    //   query: ({ type, userId, choiceId }) => ({
-    //     url: `/choice/${type}`,
-    //     method: 'POST',
-    //     body: {
-    //       userId,
-    //       choiceId,
-    //     },
-    //   }),
-    //   invalidatesTags: ['Choice'],
-    // }),
 
     postConfig: builder.mutation<any, any>({
       query: (config) => ({

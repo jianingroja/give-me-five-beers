@@ -1,6 +1,7 @@
 import { useAppDispatch } from '../../redux/hooks';
 import { usePostBeerOptionMutation } from '../../redux/apiSlice';
 import { getUserId, setChoice } from '../../redux/configSlice';
+import { Option } from '../../types/option';
 
 import BeerOptionTap from '../../assets/beer-option-tap.png';
 
@@ -9,12 +10,13 @@ import './BeerOptions.css';
 type Props = {
   setType: Function;
 };
+
 const BeerOptions = ({ setType }: Props) => {
   const dispatch = useAppDispatch();
   const userId = getUserId();
   const [postBeerOption] = usePostBeerOptionMutation();
 
-  const handleChoose = async (type: string) => {
+  const handleChoose = async (type: Option) => {
     try {
       await postBeerOption({ type, userId });
       setType(type);
@@ -23,6 +25,7 @@ const BeerOptions = ({ setType }: Props) => {
       // todo
     }
   };
+
   return (
     <div className="beer-options">
       <button className="beer-option-btn" onClick={() => handleChoose('bar')}>
