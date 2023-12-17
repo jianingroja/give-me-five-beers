@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 import { useAppSelector } from './hooks';
-import { Todo } from '../types';
+import { Todo } from '../types/types';
 
 // Define a type for the slice state
 const initialState: Todo[] = [];
@@ -27,7 +27,7 @@ export const todosSlice = createSlice({
 
       console.log('test', action.payload);
 
-      state.forEach(todo => {
+      state.forEach((todo) => {
         if (todo._id === id) {
           todo.status = type;
         }
@@ -40,6 +40,6 @@ export const todosSlice = createSlice({
 
 export const { addTodos, addTodo, editTodoStatus } = todosSlice.actions;
 
-export const getTodos = () => useAppSelector(state => state.todos);
+export const getTodos = () => useAppSelector((state) => state.todos);
 
 export const todosReducer = todosSlice.reducer;
