@@ -12,7 +12,6 @@ const initialState: Config = {
   homePage: '',
   choice: {
     type: '',
-    choiceId: '',
     id: '',
   },
 };

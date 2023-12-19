@@ -9,7 +9,7 @@ import './WishlistPage.css';
 
 type Wishlist = {
   type: string;
-  choiceId: string;
+  url: string;
 };
 
 const WishlistPage = () => {
@@ -21,8 +21,8 @@ const WishlistPage = () => {
       <h1>My wishlist</h1>
       <div>
         {isSuccess &&
-          wishlist.map((wishlist: Wishlist) => (
-            <WishlistItem key={wishlist.choiceId} wishlist={wishlist} />
+          wishlist.map((wishlist: Wishlist, index: string) => (
+            <WishlistItem key={index} wishlist={wishlist} />
           ))}
       </div>
 

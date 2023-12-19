@@ -27,9 +27,6 @@ const HomeBeerPage = () => {
       ) : (
         <BeerOptions setType={setType} />
       )}
-      {/* {!type && <BeerOptions setType={setType} />}
-      {type && <BeerInformationBox type={type} />} */}
-      {/* {true && <BeerInformationBox type={'brewery'} />} */}
     </div>
   );
 };

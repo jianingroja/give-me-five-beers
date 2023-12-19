@@ -83,6 +83,7 @@ const getWishlistDetail = async (req: Request, res: Response) => {
     const {
       params: { userId },
     } = req;
+
     const wishlistRes = await userModel.getWishlistDetail(userId);
 
     res.status(200).send(wishlistRes);

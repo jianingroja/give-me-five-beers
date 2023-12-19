@@ -80,15 +80,6 @@ export const dbApi = createApi({
       invalidatesTags: ['Wishlist'],
     }),
 
-    // todo: refactor api endpoint
-    getRandomBar: builder.query<any, void>({
-      query: () => '/choice/bar',
-    }),
-
-    getChosenBar: builder.query<any, string>({
-      query: (id) => `/choice/bar/${id}`,
-    }),
-
     getTodayBeerOption: builder.query<OptionResponse, string>({
       query: (userId) => `/choice/today/${userId}`,
     }),
@@ -150,14 +141,11 @@ export const {
   useGetUserWishlistQuery,
   useGetUserWishlistDetailQuery,
   useAddToWishlistMutation,
-  useGetRandomBarQuery,
-  useGetChosenBarQuery,
+
   useGetTodayBeerOptionQuery,
   usePostBeerOptionMutation,
   usePostConfigMutation,
 } = dbApi;
 export const dbApiReducer = dbApi.reducer;
 
-export const { useGetRandomBreweryQuery, useGetChosenBreweryQuery } =
-  breweryApi;
 export const breweryApiReducer = breweryApi.reducer;

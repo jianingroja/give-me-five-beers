@@ -53,7 +53,6 @@ const HomePage = () => {
       dispatch(
         setChoice({
           type: choice[0].type,
-          choiceId: choice[0].choiceId,
           id: choice[0]._id,
         })
       );
