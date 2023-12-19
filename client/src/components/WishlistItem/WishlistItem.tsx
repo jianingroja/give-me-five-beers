@@ -1,7 +1,4 @@
-import {
-  useGetChosenBarQuery,
-  useGetChosenBreweryQuery,
-} from '../../redux/apiSlice';
+import { useState, useEffect } from 'react';
 
 import HazyIpa from '../../assets/hazy-ipa.png';
 import Brewery from '../../assets/brewery.png';
@@ -11,24 +8,24 @@ import './WishlistItem.css';
 type Props = {
   wishlist: {
     type: string;
-    choiceId: string;
+    url: string;
   };
 };
 
 const WishlistItem = ({ wishlist }: Props) => {
-  const { type, choiceId } = wishlist;
+  const { type, url } = wishlist;
 
-  const useQuery = () => {
-    let res;
-    if (type === 'bar') {
-      res = useGetChosenBarQuery(choiceId);
-    } else {
-      res = useGetChosenBreweryQuery(choiceId);
-    }
-    return res;
-  };
+  const [info, setInfo] = useState<any>(null);
 
-  const { data: info, isSuccess } = useQuery();
+  useEffect(() => {
+    const getInfo = async () => {
+      const res = await fetch(url);
+      const data = await res.json();
+      setInfo(data);
+    };
+
+    getInfo();
+  }, []);
 
   const iconSrc = {
     bar: HazyIpa,
@@ -42,7 +39,7 @@ const WishlistItem = ({ wishlist }: Props) => {
         src={iconSrc[type as keyof typeof iconSrc]}
         alt=""
       />
-      {isSuccess && (
+      {info && (
         <div className="wishlist-item-info">
           <p>{info.name} </p>
           <p>

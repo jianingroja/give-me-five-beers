@@ -23,7 +23,6 @@ export interface User {
 
 export interface Choice {
   type: string;
-  choiceId: string;
   date?: string;
   id?: string;
   _id?: string;

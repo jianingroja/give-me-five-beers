@@ -84,7 +84,7 @@ const getWishlist = async (userId: string) => {
 
 const getWishlistDetail = async (userId: string) => {
   const wishlistRes = await UserModel.find({ _id: userId }, 'wishlist')
-    .populate({ path: 'wishlist', select: 'type choiceId' })
+    .populate({ path: 'wishlist', select: 'type url' })
     .exec();
 
   return wishlistRes;
