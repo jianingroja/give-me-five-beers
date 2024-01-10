@@ -10,60 +10,18 @@ import {
   setHomePage,
   setChoice,
   setUserId,
-  getHomePageType,
   getUserId,
 } from '../../redux/configSlice';
 
 import './HomePage.css';
 
 const HomePage = () => {
+  const dispatch = useAppDispatch();
   const [type, setType] = useState('');
 
   const userId = getUserId();
-  const homePageType = getHomePageType();
 
   const { data: user, isSuccess } = useGetUserQuery(userId);
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    const time = user?.config?.time;
-    const todos = user?.todo;
-    const choice = user?.choice;
-
-    if (time) {
-      dispatch(setTime(time));
-    }
-
-    const hasTodo = todos?.length;
-    const hasTodoInProgress = todos?.some((todo) => todo.status === 'progress');
-
-    console.log(todos);
-    console.log('has tpdp', hasTodo);
-    console.log('has tpdp in pg', hasTodoInProgress);
-
-    // has choice
-
-    // choice of today
-    const hasChoice = choice?.length;
-
-    // 第一次 login 时也能看见
-    // if (hasTodo && !hasTodoInProgress) {
-    if (hasChoice) {
-      dispatch(setHomePage('beer'));
-      dispatch(
-        setChoice({
-          type: choice[0].type,
-          id: choice[0]._id,
-        })
-      );
-    } else {
-      dispatch(setHomePage('todo'));
-    }
-  }, [isSuccess]); // ?what dependency to use
-
-  useEffect(() => {
-    setType(homePageType);
-  }, [homePageType]);
 
   // todo:
   // token in cookie
@@ -72,10 +30,42 @@ const HomePage = () => {
     if (userId) {
       localStorage.setItem('userId', userId);
     } else {
+      console.log('got it from loval');
       const userId = localStorage.getItem('userId');
       dispatch(setUserId(userId));
     }
   }, []);
+
+  useEffect(() => {
+    if (!isSuccess) {
+      return;
+    }
+
+    const time = user.config.time;
+    const choice = user.choice;
+
+    if (time) {
+      dispatch(setTime(time));
+    }
+
+    // choice of today
+    const hasChoice = choice?.length;
+
+    // 第一次 login 时也能看见
+    if (hasChoice) {
+      dispatch(setHomePage('beer'));
+      dispatch(
+        setChoice({
+          type: choice[0].type,
+          id: choice[0]._id,
+        })
+      );
+      setType('beer');
+    } else {
+      dispatch(setHomePage('todo'));
+      setType('todo');
+    }
+  }, [isSuccess]); // ?what dependency to use
 
   if (!type) {
     return 'loading';
