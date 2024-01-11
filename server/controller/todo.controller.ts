@@ -1,28 +1,43 @@
 import { Request, Response } from 'express';
 
-import * as todoModel from '../model/todo.model';
+import {
+  getUserTodos,
+  createTodo,
+  addUserTodo,
+  updateTodoStatus,
+} from '../model/todo.model';
 
-const getTodo = async (req: Request, res: Response) => {
+const getTodos = async (req: Request, res: Response) => {
   try {
     const {
       params: { userId },
     } = req;
-    const data = await todoModel.getTodo(userId);
 
-    res.status(200).send(data);
+    const todos = await getUserTodos(userId);
+
+    res.status(200).send(todos);
+    return;
   } catch (error) {
-    console.log(error);
+    res.status(400).send(error);
+    return;
   }
 };
 
 const postTodo = async (req: Request, res: Response) => {
   try {
     const { body } = req;
-    const data = await todoModel.postTodo(body);
+    const { user: userId } = body;
 
-    res.status(201).send(data);
+    const newTodo = await createTodo(body);
+    const todoId = newTodo.id;
+
+    await addUserTodo(userId, todoId);
+
+    res.status(201).send(newTodo);
+    return;
   } catch (error) {
-    console.log(error);
+    res.status(400).send(error);
+    return;
   }
 };
 
@@ -31,12 +46,13 @@ const markTodo = async (req: Request, res: Response) => {
     const {
       params: { todoId, type },
     } = req;
-    const data = await todoModel.markTodo(todoId, type);
+    const updatedTodo = updateTodoStatus(todoId, type);
 
-    res.status(200).send(data);
+    res.status(200).send(updatedTodo);
   } catch (error) {
-    console.log(error);
+    res.status(400).send(error);
+    return;
   }
 };
 
-export { getTodo, postTodo, markTodo };
+export { getTodos, postTodo, markTodo };

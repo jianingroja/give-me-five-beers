@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { TodoModel, UserModel } from './index';
 
-const getTodo = async (id: string) => {
+const getUserTodos = async (id: string) => {
   const todos = await TodoModel.find(
     {
       user: id,
@@ -12,36 +12,33 @@ const getTodo = async (id: string) => {
     },
     'content status' // todo: how to select 2 fields elegantly
   );
-  // .populate('user');
-  // populate('key name')
 
   return todos;
 };
 
-const postTodo = async (todo: any) => {
-  const newTodo = await TodoModel.create(todo);
-  console.log(newTodo);
-  const userId = todo.user;
-  const todoId = newTodo.id;
+const createTodo = async (data: any) => {
+  const newTodo = await TodoModel.create(data);
 
+  return newTodo;
+};
+
+const addUserTodo = async (userId: string, todoId: string) => {
   await UserModel.findOneAndUpdate(
     { _id: userId },
     { $push: { todo: todoId } }
   );
 
-  return newTodo;
+  return true;
 };
 
-const markTodo = async (id: string, status: string) => {
+const updateTodoStatus = async (todoId: string, status: string) => {
   const updatedTodo = await TodoModel.findOneAndUpdate(
-    { _id: id },
+    { _id: todoId },
     { status },
-    {
-      new: true,
-    }
+    { new: true }
   );
 
   return updatedTodo;
 };
 
-export { postTodo, getTodo, markTodo };
+export { getUserTodos, createTodo, addUserTodo, updateTodoStatus };

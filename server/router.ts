@@ -17,7 +17,7 @@ router.post('/signup', userController.createUser);
 router.get('/user/:userId', userController.getUser);
 router.post('/user', userController.createUser);
 
-router.get('/user/:userId/todo', todoController.getTodo);
+router.get('/user/:userId/todo', todoController.getTodos);
 router.post('/todo', todoController.postTodo);
 router.put('/todo/:todoId/:type', todoController.markTodo);
 
