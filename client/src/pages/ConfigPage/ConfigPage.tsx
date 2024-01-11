@@ -25,9 +25,7 @@ const ConfigPage = () => {
       .unwrap()
       .then((res) => {
         console.log(res);
-        const {
-          config: { time },
-        } = res;
+        const { time } = res;
         dispatch(setTime(time));
       });
 
