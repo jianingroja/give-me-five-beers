@@ -11,12 +11,14 @@ import {
   setChoice,
   setUserId,
   getUserId,
+  getHomePageType,
 } from '../../redux/configSlice';
 
 import './HomePage.css';
 
 const HomePage = () => {
   const dispatch = useAppDispatch();
+  const homePageType = getHomePageType();
   const [type, setType] = useState('');
 
   const userId = getUserId();
@@ -66,6 +68,10 @@ const HomePage = () => {
       setType('todo');
     }
   }, [isSuccess]); // ?what dependency to use
+
+  useEffect(() => {
+    setType(homePageType);
+  }, [homePageType]);
 
   if (!type) {
     return 'loading';
