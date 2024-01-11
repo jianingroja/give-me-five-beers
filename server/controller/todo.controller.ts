@@ -46,7 +46,7 @@ const markTodo = async (req: Request, res: Response) => {
     const {
       params: { todoId, type },
     } = req;
-    const updatedTodo = updateTodoStatus(todoId, type);
+    const updatedTodo = await updateTodoStatus(todoId, type);
 
     res.status(200).send(updatedTodo);
   } catch (error) {

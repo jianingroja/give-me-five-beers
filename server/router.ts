@@ -11,10 +11,9 @@ router.get('/', (req, res) => {
 });
 
 router.post('/login', userController.loginUser);
-router.post('/signup', userController.createUser);
+router.post('/signup', userController.signupUser);
 
 router.get('/user/:userId', userController.getUser);
-router.post('/user', userController.createUser);
 
 router.get('/user/:userId/todo', todoController.getTodos);
 router.post('/todo', todoController.postTodo);
@@ -22,8 +21,6 @@ router.put('/todo/:todoId/:type', todoController.markTodo);
 
 router.get('/choice/today/:userId', ChoiceController.getTodayBeerOption);
 router.post('/choice/:type', ChoiceController.postBeerOption);
-
-// router.post('/insertbar', barController.insertBar);
 
 // config
 router.post('/config/:type', userController.editConfig);
