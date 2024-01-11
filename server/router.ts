@@ -2,7 +2,6 @@ import { Router } from 'express';
 
 import * as userController from './controller/user.controller';
 import * as todoController from './controller/todo.controller';
-import * as barController from './controller/bar.controller';
 import * as ChoiceController from './controller/choice.controller';
 
 const router = Router();
