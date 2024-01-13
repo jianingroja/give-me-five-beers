@@ -53,8 +53,8 @@ const LoginPage = () => {
     login(user)
       .unwrap()
       .then((res) => {
-        console.log(res);
         const { userId } = res;
+        localStorage.setItem('userId', userId);
         dispatch(setUserId(userId));
         navigate('/home');
       });
