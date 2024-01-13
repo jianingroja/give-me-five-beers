@@ -9,7 +9,6 @@ import {
   setTime,
   setHomePage,
   setChoice,
-  setUserId,
   getUserId,
   getHomePageType,
 } from '../../redux/configSlice';
@@ -18,25 +17,12 @@ import './HomePage.css';
 
 const HomePage = () => {
   const dispatch = useAppDispatch();
-  const homePageType = getHomePageType();
   const [type, setType] = useState('');
 
   const userId = getUserId();
+  const homePageType = getHomePageType();
 
   const { data: user, isSuccess } = useGetUserQuery(userId);
-
-  // todo:
-  // token in cookie
-  // ? how to expire local storage?
-  useEffect(() => {
-    if (userId) {
-      localStorage.setItem('userId', userId);
-    } else {
-      console.log('got it from loval');
-      const userId = localStorage.getItem('userId');
-      dispatch(setUserId(userId));
-    }
-  }, []);
 
   useEffect(() => {
     if (!isSuccess) {
