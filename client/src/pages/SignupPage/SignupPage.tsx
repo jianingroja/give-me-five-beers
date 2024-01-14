@@ -82,6 +82,7 @@ const SignupPage = () => {
             value={username}
             name="username"
             onChange={handelChange}
+            data-cy="username"
           />
         </div>
         <div className="field">
@@ -91,6 +92,7 @@ const SignupPage = () => {
             value={password}
             name="password"
             onChange={handelChange}
+            data-cy="password"
           />
           <img
             src={secret ? OpeningRight : OpeningLeft}
@@ -98,7 +100,7 @@ const SignupPage = () => {
             onClick={handleToggle}
           />
         </div>
-        <button type="submit" disabled={!hasAllInputs}>
+        <button type="submit" disabled={!hasAllInputs} btn-cy="submit">
           Sign up
         </button>
       </form>
