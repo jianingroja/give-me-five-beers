@@ -69,4 +69,4 @@ jobs:
         with:
           app-name: 'gm5bs-server'
           slot-name: 'Production'
-          package: ./server
+          package: ./
