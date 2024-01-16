@@ -52,10 +52,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: node-app
-          path: ./server/release.zip
 
       - name: Unzip artifact for deployment
-        run: unzip ./server/release.zip
+        run: unzip release.zip
 
       - name: Login to Azure
         uses: azure/login@v1
