@@ -44,6 +44,10 @@ This project is built with MERN stack, fully written in Typescript.
 - Mongo DB Atlas
 - Mongoose
 
+### Testing
+
+- Cypress
+
 ## UX
 
 User can configure a _beer time_ to indicate "morning" and "evening", the default is 18:00.
