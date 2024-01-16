@@ -6,10 +6,12 @@ import { OptionResponse, OptionRequestArg } from '../types/option';
 
 // why do i use rtk?
 
+const baseUrl = import.meta.env.VITE_LOCAL_BASE_URL;
+
 // Define a service using a base URL and expected endpoints
 export const dbApi = createApi({
   reducerPath: 'dbApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000' }),
+  baseQuery: fetchBaseQuery({ baseUrl }),
   tagTypes: ['Config', 'Wishlist', 'Choice', 'Todo'],
   endpoints: (builder) => ({
     getTodos: builder.query<Todo[], string>({
