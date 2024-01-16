@@ -30,12 +30,16 @@ const App = () => {
     console.log('got it from local', userId);
 
     if (!userId) {
-      navigate('/welcome');
+      if (pathname === '/signup' || pathname === '/login') {
+        navigate(pathname);
+      } else {
+        navigate('/welcome');
+      }
     } else {
       dispatch(setUserId(userId));
       // todo: use global auth hook
       // todo: welcome page access with userId - logout
-      navigate(pathname === '/' ? '/home' : `${pathname}`);
+      navigate(pathname === '/' ? '/home' : pathname);
     }
   }, []);
 
