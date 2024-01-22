@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import { generateToken } from '../helper/jwt';
+import { RequestWithUser } from '../type/user';
 
 import {
   getUserInfo,
@@ -12,15 +13,21 @@ import {
   updateUserWishlist,
 } from '../model/user.model';
 
-const getUser = async (req: Request, res: Response) => {
+const signupUser = async (req: Request, res: Response) => {
   try {
-    const {
-      params: { userId },
-    } = req;
+    const { username, password } = req.body;
+    const exitedUser = await findUser(username);
 
-    const userInfo = await getUserInfo(userId);
+    // check if user exits
+    if (exitedUser) {
+      throw 'user already exits';
+    }
 
-    res.status(200).send(userInfo);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await createUser(username, hashedPassword);
+
+    const token = generateToken(user.id);
+    res.status(201).send({ userId: user.id, token });
     return;
   } catch (error) {
     res.status(400).send(error);
@@ -55,25 +62,29 @@ const loginUser = async (req: Request, res: Response) => {
   }
 };
 
-const signupUser = async (req: Request, res: Response) => {
+const getUser = async (req: Request, res: Response) => {
   try {
-    const { username, password } = req.body;
-    const exitedUser = await findUser(username);
+    const {
+      params: { userId },
+    } = req;
 
-    // check if user exits
-    if (exitedUser) {
-      throw 'user already exits';
-    }
+    const userInfo = await getUserInfo(userId);
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await createUser(username, hashedPassword);
-
-    const token = generateToken(user.id);
-    res.status(201).send({ userId: user.id, token });
+    res.status(200).send(userInfo);
     return;
   } catch (error) {
     res.status(400).send(error);
     return;
+  }
+};
+
+const getMe = async (req: Request, res: Response) => {
+  try {
+    const { user } = req as RequestWithUser;
+    res.status(200).send(user);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error);
   }
 };
 
@@ -155,9 +166,10 @@ const addToWishlist = async (req: Request, res: Response) => {
 };
 
 export {
-  getUser,
-  loginUser,
   signupUser,
+  loginUser,
+  getUser,
+  getMe,
   editConfig,
   getWishlist,
   getWishlistDetail,

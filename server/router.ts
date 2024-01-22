@@ -4,6 +4,8 @@ import * as userController from './controller/user.controller';
 import * as todoController from './controller/todo.controller';
 import * as ChoiceController from './controller/choice.controller';
 
+import { checkAuth } from './middleware/auth';
+
 const router = Router();
 
 router.get('/', (req, res) => {
@@ -13,6 +15,7 @@ router.get('/', (req, res) => {
 router.post('/login', userController.loginUser);
 router.post('/signup', userController.signupUser);
 
+router.get('/user/me', checkAuth, userController.getMe);
 router.get('/user/:userId', userController.getUser);
 
 router.get('/user/:userId/todo', todoController.getTodos);
