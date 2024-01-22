@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
+import { generateToken } from '../helper/jwt';
 
 import {
   getUserInfo,
@@ -30,18 +31,23 @@ const getUser = async (req: Request, res: Response) => {
 const loginUser = async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
-
+    console.log(req.body);
     const user = await findUser(username);
+
+    // check if user exits
     if (!user) {
-      throw 'username ';
+      throw 'user does not exit ';
     }
 
+    // check password
     const matchPassword = await bcrypt.compare(password, user.password || '');
     if (!matchPassword) {
       throw ' password incorrect';
     }
 
-    res.status(201).send({ userId: user.id });
+    const token = generateToken(user.id);
+    res.status(201).send({ userId: user.id, token });
+
     return;
   } catch (error) {
     res.status(400).send(error);
@@ -54,6 +60,7 @@ const signupUser = async (req: Request, res: Response) => {
     const { username, password } = req.body;
     const exitedUser = await findUser(username);
 
+    // check if user exits
     if (exitedUser) {
       throw 'user already exits';
     }
@@ -61,7 +68,8 @@ const signupUser = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await createUser(username, hashedPassword);
 
-    res.status(201).send({ userId: user.id });
+    const token = generateToken(user.id);
+    res.status(201).send({ userId: user.id, token });
     return;
   } catch (error) {
     res.status(400).send(error);
