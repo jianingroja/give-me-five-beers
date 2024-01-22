@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
+import { generateToken } from '../helper/jwt';
+import { RequestWithUser } from '../type/user';
 
 import {
   getUserInfo,
@@ -10,6 +12,55 @@ import {
   getUserWishlistDetail,
   updateUserWishlist,
 } from '../model/user.model';
+
+const signupUser = async (req: Request, res: Response) => {
+  try {
+    const { username, password } = req.body;
+    const exitedUser = await findUser(username);
+
+    // check if user exits
+    if (exitedUser) {
+      throw 'user already exits';
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await createUser(username, hashedPassword);
+
+    const token = generateToken(user.id);
+    res.status(201).send({ userId: user.id, token });
+    return;
+  } catch (error) {
+    res.status(400).send(error);
+    return;
+  }
+};
+
+const loginUser = async (req: Request, res: Response) => {
+  try {
+    const { username, password } = req.body;
+    console.log(req.body);
+    const user = await findUser(username);
+
+    // check if user exits
+    if (!user) {
+      throw 'user does not exit ';
+    }
+
+    // check password
+    const matchPassword = await bcrypt.compare(password, user.password || '');
+    if (!matchPassword) {
+      throw ' password incorrect';
+    }
+
+    const token = generateToken(user.id);
+    res.status(201).send({ userId: user.id, token });
+
+    return;
+  } catch (error) {
+    res.status(400).send(error);
+    return;
+  }
+};
 
 const getUser = async (req: Request, res: Response) => {
   try {
@@ -27,45 +78,13 @@ const getUser = async (req: Request, res: Response) => {
   }
 };
 
-const loginUser = async (req: Request, res: Response) => {
+const getMe = async (req: Request, res: Response) => {
   try {
-    const { username, password } = req.body;
-
-    const user = await findUser(username);
-    if (!user) {
-      throw 'username ';
-    }
-
-    const matchPassword = await bcrypt.compare(password, user.password || '');
-    if (!matchPassword) {
-      throw ' password incorrect';
-    }
-
-    res.status(201).send({ userId: user.id });
-    return;
+    const { user } = req as RequestWithUser;
+    res.status(200).send(user);
   } catch (error) {
+    console.log(error);
     res.status(400).send(error);
-    return;
-  }
-};
-
-const signupUser = async (req: Request, res: Response) => {
-  try {
-    const { username, password } = req.body;
-    const exitedUser = await findUser(username);
-
-    if (exitedUser) {
-      throw 'user already exits';
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await createUser(username, hashedPassword);
-
-    res.status(201).send({ userId: user.id });
-    return;
-  } catch (error) {
-    res.status(400).send(error);
-    return;
   }
 };
 
@@ -147,9 +166,10 @@ const addToWishlist = async (req: Request, res: Response) => {
 };
 
 export {
-  getUser,
-  loginUser,
   signupUser,
+  loginUser,
+  getUser,
+  getMe,
   editConfig,
   getWishlist,
   getWishlistDetail,
